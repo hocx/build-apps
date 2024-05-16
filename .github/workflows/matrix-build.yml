@@ -144,29 +144,29 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  release-metadata:
-    needs: [generate-release, run]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  # release-metadata:
+  #   needs: [generate-release, run]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Prepare build.md
-        run: |
-          cp extras.sh /tmp/extras.sh
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git fetch
-          git checkout update
-          filename="build.md"
-          /tmp/extras.sh "revanced/revanced-integrations" "revanced/revanced-patches" "revanced/revanced-cli" > $filename
-          echo -e "\n\n" >> $filename
-          /tmp/extras.sh "anddea/revanced-integrations" "anddea/revanced-patches" "revanced/revanced-cli" >> $filename
-          git add $filename
-          git commit -m "Bump version ${{ needs.generate-release.outputs.version }}"
-          git push
+  #     - name: Prepare build.md
+  #       run: |
+  #         cp extras.sh /tmp/extras.sh
+  #         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+  #         git config --global user.name "github-actions[bot]"
+  #         git fetch
+  #         git checkout update
+  #         filename="build.md"
+  #         /tmp/extras.sh "revanced/revanced-integrations" "revanced/revanced-patches" "revanced/revanced-cli" > $filename
+  #         echo -e "\n\n" >> $filename
+  #         /tmp/extras.sh "anddea/revanced-integrations" "anddea/revanced-patches" "revanced/revanced-cli" >> $filename
+  #         git add $filename
+  #         git commit -m "Bump version ${{ needs.generate-release.outputs.version }}"
+  #         git push
 
   release:
     needs: [generate-release, run]
@@ -182,62 +182,62 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  telegram-notify:
-    if: ${{ github.ref_name == 'main' }}
-    needs: [generate-release, run, release]
-    name: Notify Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # telegram-notify:
+  #   if: ${{ github.ref_name == 'main' }}
+  #   needs: [generate-release, run, release]
+  #   name: Notify Release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10" # The python version to use.
-          cache: "pip"
-          cache-dependency-path: "telegram-script/requirements.txt"
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.10" # The python version to use.
+  #         cache: "pip"
+  #         cache-dependency-path: "telegram-script/requirements.txt"
 
-      - name: Install dependencies
-        run: pip install -r telegram-script/requirements.txt
+  #     - name: Install dependencies
+  #       run: pip install -r telegram-script/requirements.txt
 
-      - name: Run telegram notification script
-        run: python3 telegram-script
+  #     - name: Run telegram notification script
+  #       run: python3 telegram-script
 
-      - name: Telegram Channel Update
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          message_file: release_notification.md
+  #     - name: Telegram Channel Update
+  #       uses: appleboy/telegram-action@master
+  #       with:
+  #         to: ${{ secrets.TELEGRAM_TO }}
+  #         token: ${{ secrets.TELEGRAM_TOKEN }}
+  #         format: markdown
+  #         message_file: release_notification.md
 
-  push-notify:
-    if: ${{ github.ref_name == 'main' }}
-    needs: [generate-release, run, release]
-    name: Push Notification
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # push-notify:
+  #   if: ${{ github.ref_name == 'main' }}
+  #   needs: [generate-release, run, release]
+  #   name: Push Notification
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11" # The python version to use.
-          cache: "pip"
-          cache-dependency-path: "push-notify/requirements.txt"
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.11" # The python version to use.
+  #         cache: "pip"
+  #         cache-dependency-path: "push-notify/requirements.txt"
 
-      - name: Install dependencies
-        run: pip install -r push-notify/requirements.txt
+  #     - name: Install dependencies
+  #       run: pip install -r push-notify/requirements.txt
 
-      - name: Create google-auth json
-        run: echo "${{ secrets.GOOGLE_AUTH_JSON }}" | base64 -d > google-services.json
+  #     - name: Create google-auth json
+  #       run: echo "${{ secrets.GOOGLE_AUTH_JSON }}" | base64 -d > google-services.json
 
-      - name: Run push notification script
-        run: |
-          release_tag="${{ needs.generate-release.outputs.version }}"
-          release_body=$(gh release view $release_tag --json body -q .body)
-          python3 push-notify --title "New Release $release_tag" --body "$release_body" --api_url ${{ secrets.NOTIF_API_URL }} --bearer ${{ secrets.NOTIF_API_BEARER }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Run push notification script
+  #       run: |
+  #         release_tag="${{ needs.generate-release.outputs.version }}"
+  #         release_body=$(gh release view $release_tag --json body -q .body)
+  #         python3 push-notify --title "New Release $release_tag" --body "$release_body" --api_url ${{ secrets.NOTIF_API_URL }} --bearer ${{ secrets.NOTIF_API_BEARER }}
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
