@@ -9,9 +9,18 @@ enable-magisk-update = true # set this to false if you do not want to receive up
 build-mode = "apk"
 excluded-patches = ""
 included-patches = ""
-version = "auto"
 # archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.youtube"
-uptodown-dlurl = "https://youtube.en.uptodown.com/android"
+# uptodown-dlurl = "https://youtube.en.uptodown.com/android"
+apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube/"
+arch = "arm64-v8a"
+version = "beta"
+
+[Lightroom]
+enabled = true
+# uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom/
+arch = "arm64-v8a"
+version = "auto"
 
 [Music]
 build-mode = "apk"
@@ -188,12 +197,6 @@ version = "auto"
 enabled = true
 version = "auto"
 uptodown-dlurl = "https://meme-generator-free.en.uptodown.com/android"
-
-[Lightroom]
-enabled = true
-version = "auto"
-uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
-arch = "both"
 
 [Tumblr]
 enabled = true

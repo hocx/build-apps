@@ -56,39 +56,39 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - id: "YouTube-anddea"
-          - id: "Music-anddea"
+          # - id: "YouTube-anddea"
+          # - id: "Music-anddea"
           - id: "YouTube"
-          - id: "Music"
-          - id: "Twitter"
-          - id: "Twitch"
-          - id: "TikTok"
-          - id: "Reddit"
-          - id: "Messenger"
-          - id: "Facebook"
+          # - id: "Music"
+          # - id: "Twitter"
+          # - id: "Twitch"
+          # - id: "TikTok"
+          # - id: "Reddit"
+          # - id: "Messenger"
+          # - id: "Facebook"
           # - id: 'Spotify'
-          - id: "Spotify-Lite"
-          #   - id: "Citra"
-          #   - id: "Backdrops"
-          #   - id: "WarnWetter"
-          #   - id: "Windyapp"
-          - id: "MyExpenses"
-          - id: "NyxMusicPlayer"
-          #   - id: "IconPackStudio"
-          - id: "TickTick"
+          # - id: "Spotify-Lite"
+          # - id: "Citra"
+          # - id: "Backdrops"
+          # - id: "WarnWetter"
+          # - id: "Windyapp"
+          # - id: "MyExpenses"
+          # - id: "NyxMusicPlayer"
+          # - id: "IconPackStudio"
+          # - id: "TickTick"
           # - id: "Tasker"
-          #   - id: "Photomath"
-          #   - id: "Instagram-armeabi-v7a"
-          - id: "Instagram"
-          - id: "InShorts"
-          #   - id: "SyncForReddit"
-          - id: "InfinityForReddit"
-          - id: "VSCO"
-          - id: "Pixiv"
-          #   - id: "Trakt"
-          #   - id: "MemeGenerator"
+          # - id: "Photomath"
+          # - id: "Instagram-armeabi-v7a"
+          # - id: "Instagram"
+          # - id: "InShorts"
+          # - id: "SyncForReddit"
+          # - id: "InfinityForReddit"
+          # - id: "VSCO"
+          # - id: "Pixiv"
+          # - id: "Trakt"
+          # - id: "MemeGenerator"
           - id: "Lightroom"
-          - id: "Tumblr"
+          # - id: "Tumblr"
 
     env:
       RELEASE_VERSION: ${{ needs.generate-release.outputs.version }}
@@ -106,8 +106,8 @@ jobs:
 
       - name: Generate ${{ matrix.id }} config
         run: |
-           ./gen_sep_config.sh config.toml ${{ matrix.id }} sep_config.toml
-           cat sep_config.toml
+          ./gen_sep_config.sh config.toml ${{ matrix.id }} sep_config.toml
+          cat sep_config.toml
 
       - name: Build modules/APKs
         run: |
@@ -194,16 +194,16 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10' # The python version to use.
-          cache: 'pip'
-          cache-dependency-path: 'telegram-script/requirements.txt'
-        
+          python-version: "3.10" # The python version to use.
+          cache: "pip"
+          cache-dependency-path: "telegram-script/requirements.txt"
+
       - name: Install dependencies
         run: pip install -r telegram-script/requirements.txt
-      
+
       - name: Run telegram notification script
         run: python3 telegram-script
-          
+
       - name: Telegram Channel Update
         uses: appleboy/telegram-action@master
         with:
@@ -211,7 +211,7 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           format: markdown
           message_file: release_notification.md
-  
+
   push-notify:
     if: ${{ github.ref_name == 'main' }}
     needs: [generate-release, run, release]
@@ -221,13 +221,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11' # The python version to use.
-          cache: 'pip'
-          cache-dependency-path: 'push-notify/requirements.txt'
+          python-version: "3.11" # The python version to use.
+          cache: "pip"
+          cache-dependency-path: "push-notify/requirements.txt"
 
       - name: Install dependencies
         run: pip install -r push-notify/requirements.txt
