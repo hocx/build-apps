@@ -71,7 +71,7 @@ jobs:
           # - id: "Citra"
           # - id: "Backdrops"
           # - id: "WarnWetter"
-          - id: "Windyapp"
+          # - id: "Windyapp"
           # - id: "MyExpenses"
           # - id: "NyxMusicPlayer"
           # - id: "IconPackStudio"
