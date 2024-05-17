@@ -59,7 +59,7 @@ jobs:
           # - id: "YouTube-anddea"
           # - id: "Music-anddea"
           - id: "YouTube"
-          # - id: "Music"
+          - id: "Music"
           # - id: "Twitter"
           # - id: "Twitch"
           # - id: "TikTok"
